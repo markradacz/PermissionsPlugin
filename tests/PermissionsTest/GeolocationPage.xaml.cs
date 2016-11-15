@@ -16,6 +16,29 @@ namespace PermissionsTest
             InitializeComponent();
         }
 
+		#region MJR test
+		protected override async void OnAppearing()
+		{
+			base.OnAppearing();
+			await DisplayAlert("Test", "OnAppearing() called on Geolocation Page", "OK");
+			await GetCalendarPermissions();
+		}
+
+		async Task GetCalendarPermissions()
+		{
+			var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Calendar);
+
+			await DisplayAlert("Permission.Calendar Results", status.ToString(), "OK");
+
+			if (status != PermissionStatus.Granted)
+			{
+				status = (await CrossPermissions.Current.RequestPermissionsAsync(Permission.Calendar))[Permission.Calendar];
+				await DisplayAlert("Permission.Calendar Results", status.ToString(), "OK");
+			}
+		}
+		#endregion
+
+
 		void OpenSettings_Clicked(object sender, System.EventArgs e)
 		{
 			CrossPermissions.Current.OpenAppSettings();
